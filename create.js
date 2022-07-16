@@ -10,55 +10,53 @@ const database = client.db("sutd");
 const collection = database.collection("students");
 
 // validator for required fields
-database.createCollection("students", {
-    validator: {
-       $jsonSchema: {
-          bsonType: "object",
-          required: [ "student_id", "average_grade", "full_name", "grades", "term" ],
-          properties: {
-             student_id: {
-                bsonType: "int",
-                description: "must be a string and is required"
-             },
-             average_grade: {
-                bsonType: "double",
-                minimum: 0,
-                maximum: 100,
-                description: "must be a float in [ 0, 100 ] and is required"
-             },
-             full_name: {
-                bsonType: "String",
-                description: "Student's fullname and is required"
-             },
-             grades: {
-                bsonType: "Array",
-                description: "Array of students grades as floats, is required, initally empty"
-             },
-             term: {
-                bsonType: "int",
-                description: "Students current school term and is required"
-             }
-          }
-       }
-    }
- })
+// database.createCollection("students", {
+//     "validator": {
+//        $jsonSchema: {
+//           "bsonType": "object",
+//           "required": [ "student_id", "average_grade", "full_name", "grades", "term"],
+//           "properties": {
+//              "student_id": {
+//                 "bsonType": "int",
+//                 description: "must be a string and is required"
+//              },
+//              "average_grade": {
+//                 "bsonType": "double",
+//                 "minimum": 0.0,
+//                 "maximum": 100.0,
+//                 "description": "must be a double in [ 0, 100 ] and is required"
+//              },
+//              "full_name": {
+//                 "bsonType": "string",
+//                 "description": "Student's fullname and is required"
+//              },
+//              "grades": {
+//                 "bsonType": "array",
+//                 "description": "Array of students grades as floats, is required, initally empty"
+//              },
+//              "term": {
+//                 "bsonType": "int",
+//                 "description": "Students current school term and is required"
+//              }
+//           }
+//        }
+//     }
+//  });
 
- // initial creation
+// initial creation
 var inititalBulkWrite = [];
 for (let i = 0; i < 20; i++) {
     inititalBulkWrite.push(
         {
             "insertOne":{
-                "filter": {},
-                "update": {
-                    student_id : 1005000 + i,
-                    average_grade: 0.00,
-                    full_name: getRandomName(),
-                    grades: [],
-                    term: 0
+                    "student_id" : i,
+                    "average_grade": 0.0,
+                    "full_name": getRandomName(),
+                    "grades": [],
+                    "term": 0
                 }
             }    
-    });
+    );
   }
   collection.bulkWrite(inititalBulkWrite,
     {"ordered": true, "w": 1}, function(err, result) {
@@ -66,7 +64,7 @@ for (let i = 0; i < 20; i++) {
         console.log(err);
     });
 
-    
+// returns string, it was working earlier    
 function getRandomName(){
     return uniqueNamesGenerator(config)+ " "+  uniqueNamesGenerator(config)
   }
